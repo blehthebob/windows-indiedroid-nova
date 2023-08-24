@@ -1,5 +1,5 @@
 # windows-indiedroid-nova
-Running Windows for ARM64 on the [Indiedroid Nova](https://indiedroid.us/) with a Rockchip RK3588S SoC, produced by ameriDroid, largely based on documentation for the [WoR Project](https://worproject.com/).
+Running Windows for ARM64 on the [Indiedroid Nova](https://indiedroid.us/) with a Rockchip RK3588S SoC, produced by ameriDroid, largely based on documentation for the [WoR Project](https://worproject.com/). The specific board we bought can be found [here](https://www.youyeetoo.com/products/youyeetoo-pico-pi-pc-rockchip-rk3588s-single-board-computer?VariantsId=11120).
 
 ## How to set up Windows on an Indiedroid Nova board
 
@@ -93,21 +93,33 @@ We need to flash a UEFI firmware iamge to our board, so that it will behave almo
 
 Some boards come with NOR memory, which there are instructions for [here](https://worproject.com/guides/how-to-install/on-rockchip#preparing-the-board) on the WoR Project website, however we have not tried it, and cannot comment on how well it is working.
 
-#### For flashing to SD card
+If you are using the Indiedroid Nova, there is no on-board NOR memory, so you will have to flash the UEFI to an SD card or eMMC(only if the Windows image is on SSD).
+
+#### Flashing a UEFI to eMMC
+
+1. Download an etcher tool, we used Balena Etcher: <https://etcher.balena.io/> (The following instructions will be for Balena Etcher).
+
+2. Download the latest UEFI image for Indiedroid Nova: <https://github.com/edk2-porting/edk2-rk3588/actions/workflows/nightly.yml> Pick the latest successful nightly build and download the `indiedroid-nova UEFI Release image`, and extract the .zip file to get the UEFI image.
+
+3. Mount the eMMC on the adapter, then plug this into your computer. If it is not recognised or will not fit into the SD card slot try plugging the adapter into a dongle.
+
+4. Open Balena Etcher, select 'Flash from file' and select the UEFI image you just downloaded.
+
+5. Select 'Select target', select your SD card and click the 'Flash!' button. You may need admin privileges to allow the app to make changes to your device
+
+#### Flashing a UEFI to SD card
 
 If you are using the Indiedroid Nova, there is no on-board NOR memory, so you will have to flash the UEFI to an SD card.
 
 1. Download an etcher tool, we used Balena Etcher: <https://etcher.balena.io/> (The following instructions will be for Balena Etcher).
 
-2. Download the latest UEFI image for Indiedroid Nova: <https://github.com/edk2-porting/edk2-rk35xx/releases> (it should look like `indiedroid-nova_UEFI_Release_v0.7.1.img`).
+2. Download the latest UEFI image for Indiedroid Nova: <https://github.com/edk2-porting/edk2-rk3588/actions/workflows/nightly.yml> Pick the latest successful nightly build and download the `indiedroid-nova UEFI Release image`, and extract the .zip file to get the UEFI image.
 
-3. Note that, if you have flashed the Windows Image to eMMC, you will need to download a UEFI from: <https://github.com/edk2-porting/edk2-rk3588/actions/workflows/nightly.yml> Pick the latest successful nightly build and download the `indiedroid-nova UEFI Release image`, and extract the .zip file to get the UEFI image.
+3. Connect your SD card and open Balena Etcher.
 
-4. Connect your SD card and open Balena Etcher.
+4. Select 'Flash from file' and select the UEFI image you just downloaded.
 
-5. Select 'Flash from file' and select the UEFI image you just downloaded.
-
-6. Select 'Select target', select your SD card and click the 'Flash!' button. You may need admin privileges to allow the app to make changes to your device
+5. Select 'Select target', select your SD card and click the 'Flash!' button. You may need admin privileges to allow the app to make changes to your device
 
 ### Startup
 
@@ -123,16 +135,50 @@ After preparing the boot-up drive (either the SSD drive or the eMMC), and the UE
 
 ### Black screen on start
 
-#### Turning on the Indiedroid initially
+If you plug in the indiedroid after setup, and do not see the AmeriDroid loading screen, there may be a power issue. Sometimes, with the wrong power supply the board will not start - make sure that it is 5V/3A and if it still doesn't work just try other power supplies (we found that our power supplies did not all work consistently even though they were the same rating).
+
+If the LED light on the board lights up but the screen is still black, there may be an issue with the UEFI. Remove the SD card and format it by deleting the UEFI volume in Disk Management (Windows) and reformatting the SD card. Then flash the most recent nightly build of the UEFI onto the SD card.
 
 ### BSOD
 
+#### &emsp;On startup
+
+You may have a USB stick left plugged in from the previous session. Unplug the power and remove the USB stick, then start the computer again and plug in the USB after it has booted.
+
+#### &emsp;While running
+
+This may be due to the GPU not working, anything that is graphically intense will not run well at all. We also found that this was more common with slower storage media so you can consider upgrading to faster storage. This is not a major problem, you should be able to unplug power and restart without worrying.
+
+#### &emsp;On power off
+
+This has happened to us occasionally although we don't know the cause. It has had no effects that we can see so far so you should be able to unplug power and restart without worrying.
+
 ### Inaccessible boot device
+
+Your Windows image is probably on a USB stick or an SD card. This is too slow, so use an SSD or eMMC instead.
 
 ### UEFI doesn't recognise eMMC
 
+You may have a USB stick left plugged in from the previous session. Unplug the power and remove the USB stick, then start the computer again and plug in the USB after it has booted.
+
+You may have the wrong version of the UEFI. Download the most recent nightly build [here](https://github.com/edk2-porting/edk2-rk3588/actions/workflows/nightly.yml).
+
+If this still does not work you may have the wrong eMMC driver. Follow the Windows flashing instructions again and make sure that you follow the instructions on downloading the driver as accurately as possible.
+
 ### No WiFi when setting up Windows
+
+The Wifi is currently not working, but ethernet works if plugged in via a usb-c dongle in the board's usb-c port.
+
+Another way to bypass this is by pressing shift-F10 to launch cmd, then type `oobe\bypassnro` in the command prompt and press enter. This will restart the computer and when you reach the "Let's connect you to a network" screen, click "I don't have internet", continue to click "limited setup", accept the license agreement and continue to create a local user account.
 
 ### Running slowly
 
+This may be caused by Windows updating. Check the settings, and if Windows is updating let it finish the update. You can improve the speed by going to Settings > Accessibility > Visual Effects and turning off transparency and animation effects. You can also use the Windows + R shortcut to open the Run command, then type sysdm.cpl and pressing enter to launch system properties. Under "Performance" click the settings button, then select "Adjust for best performance" and click "ok".
+
+If your computer is still running slowly look into getting a faster storage device for the Windows image.
+
 ### USB ports / Ethernet not working
+
+USB 3.0 ports work, nothing else works except the USB-C port and micro-HDMI, so we recommend you use a USB-C hub to connect all your peripherals.
+
+Note that the USB ports still work for power e.g. a fan, LEDs.
