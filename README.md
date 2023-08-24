@@ -1,6 +1,8 @@
 # windows-indiedroid-nova
 Running Windows for ARM64 on the [Indiedroid Nova](https://indiedroid.us/) with a Rockchip RK3588S SoC, produced by ameriDroid, largely based on documentation for the [WoR Project](https://worproject.com/). The specific board we bought can be found [here](https://www.youyeetoo.com/products/youyeetoo-pico-pi-pc-rockchip-rk3588s-single-board-computer?VariantsId=11120).
 
+Some of the files required for the installation below are included in this repository.
+
 ## How to set up Windows on an Indiedroid Nova board
 
 ### Disclaimer
