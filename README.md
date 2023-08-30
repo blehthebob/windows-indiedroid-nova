@@ -31,11 +31,11 @@ See the [WoR Project website](https://worproject.com/guides/getting-windows-imag
 
 The initial Windows ISO image can be downloaded using UUPDump:
 
-1. Go to [https://uupdump.net/](https://uupdump.net/)
+1. Go to <https://uupdump.net/>
 
 2. Under the Windows 11 drop-down list, select the "22H2" option.
 
-3. Select a version of Windows 11 for the ARM64 processor. We have worked with builds v22621.1635, v22621.1928, v22621.2070, so these versions should work.
+3. Select a version of Windows 11 for the ARM64 processor. We have worked with builds v22621.1635, v22621.1928, v22621.2070, so these versions should work. Newer and older versions may not be supported.
 
 4. Choose the preferred language for the system and click "Next". Then choose the desired edition of Windows and click "Next".
 
